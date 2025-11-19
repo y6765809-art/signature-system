@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מערכת חתימות דיגיטליות מקצועית</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: linear-gradient(to bottom, #ffffff 0%, #f5f5f5 100%);
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(212,175,55,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
+            color: #d4af37;
+            padding: 40px 30px;
+            text-align: center;
+            border-bottom: 3px solid #d4af37;
+            position: relative;
+        }
+        
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #d4af37 0%, #c0c0c0 50%, #d4af37 100%);
+        }
+        
+        .header h1 {
+            font-size: 2.4em;
+            margin-bottom: 8px;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .header p {
+            color: #c0c0c0;
+            font-size: 1em;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+        
+        .content {
+            padding: 35px;
+        }
+        
+        .section {
+            margin-bottom: 25px;
+            padding: 28px;
+            background: #ffffff;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+            border-right: 4px solid #d4af37;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .section h2 {
+            color: #2c2c2c;
+            margin-bottom: 18px;
+            font-size: 1.5em;
+            font-weight: 400;
+            letter-spacing: 1px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        input[type="text"], 
+        input[type="password"], 
+        input[type="email"],
+        select {
+            width: 100%;
+            padding: 13px 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 4px;
+            font-size: 0.95em;
+            margin: 10px 0;
+            transition: all 0.3s;
+            font-family: inherit;
+            background: #fafafa;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #d4af37;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(212,175,55,0.1);
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #d4af37 0%, #c5a028 100%);
+            color: #1a1a1a;
+            border: none;
+            padding: 13px 35px;
+            font-size: 0.95em;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 6px;
+            box-shadow: 0 3px 12px rgba(212,175,55,0.3);
+            font-family: inherit;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn:hover {
+            background: linear-gradient(135deg, #e0bb47 0%, #d4af37 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 5px 18px rgba(212,175,55,0.4);
+        }
+        
+        .btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            color: #666;
+        }
+        
+        .btn-small {
+            padding: 9px 22px;
+            font-size: 0.88em;
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #8b0000 0%, #660000 100%);
+            color: #ffffff;
+        }
+        
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #a00000 0%, #8b0000 100%);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #2d5016 0%, #1a3a0f 100%);
+            color: #ffffff;
+        }
+        
+        .btn-silver {
+            background: linear-gradient(135deg, #c0c0c0 0%, #a8a8a8 100%);
+            color: #1a1a1a;
+        }
+        
+        .alert {
+            padding: 16px 20px;
+            border-radius: 4px;
+            margin: 18px 0;
+            border-right: 4px solid;
+        }
+        
+        .alert-info {
+            background: #f0f8ff;
+            color: #1a4d7a;
+            border-color: #5b9bd5;
+        }
+        
+        .alert-success {
+            background: #f0f8f0;
+            color: #2d5016;
+            border-color: #4a7c2c;
+        }
+        
+        .alert-warning {
+            background: #fffbf0;
+            color: #7a6a1a;
+            border-color: #d4af37;
+        }
+        
+        .alert-error {
+            background: #fff0f0;
+            color: #7a1a1a;
+            border-color: #a00000;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        .upload-area {
+            border: 2px dashed #d4af37;
+            border-radius: 6px;
+            padding: 45px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #fafafa;
+        }
+        
+        .upload-area:hover {
+            background: #f5f5f0;
+            border-color: #c5a028;
+            transform: scale(1.01);
+        }
+        
+        .upload-area.dragover {
+            background: #fffef8;
+            border-color: #d4af37;
+            border-width: 3px;
+        }
+        
+        input[type="file"] {
+            display: none;
+        }
+        
+        .pdf-preview {
+            margin-top: 22px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 18px;
+            background: #fafafa;
+            max-height: 520px;
+            overflow-y: auto;
+        }
+        
+        .pdf-canvas-wrapper {
+            text-align: center;
+        }
+        
+        #pdfCanvas {
+            max-width: 100%;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            cursor: crosshair;
+            display: inline-block;
+            background: white;
+        }
+        
+        .field-list {
+            margin-top: 22px;
+        }
+        
+        .field-item {
+            background: #fafafa;
+            padding: 14px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border: 1px solid #e0e0e0;
+            border-right: 3px solid #c0c0c0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s;
+        }
+        
+        .field-item:hover {
+            border-right-color: #d4af37;
+            background: #ffffff;
+        }
+        
+        .field-type {
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 3px;
+            font-size: 0.82em;
+            font-weight: 600;
+            margin-left: 12px;
+            letter-spacing: 0.5px;
+        }
+        
+        .field-type.signature {
+            background: linear-gradient(135deg, #d4af37 0%, #c5a028 100%);
+            color: #1a1a1a;
+        }
+        
+        .field-type.text {
+            background: linear-gradient(135deg, #c0c0c0 0%, #a8a8a8 100%);
+            color: #1a1a1a;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 25px;
+        }
+        
+        .spinner {
+            border: 4px solid #f0f0f0;
+            border-top: 4px solid #d4af37;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 12px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .link-box {
+            background: linear-gradient(to right, #f0f8f0 0%, #ffffff 100%);
+            padding: 18px;
+            border-radius: 4px;
+            border: 2px solid #4a7c2c;
+            border-right: 4px solid #2d5016;
+            margin: 18px 0;
+            word-break: break-all;
+        }
+        
+        .link-box a {
+            color: #2d5016;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 0.95em;
+        }
+        
+        .link-box a:hover {
+            text-decoration: underline;
+        }
+        
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 32px;
+            padding: 0 25px;
+            background: #fafafa;
+            padding: 20px 25px;
+            border-radius: 6px;
+        }
+        
+        .step {
+            flex: 1;
+            text-align: center;
+            padding: 8px;
+            position: relative;
+            color: #999;
+            font-size: 0.9em;
+        }
+        
+        .step::after {
+            content: '';
+            position: absolute;
+            top: 18px;
+            right: -50%;
+            width: 100%;
+            height: 2px;
+            background: #e0e0e0;
+            z-index: 0;
+        }
+        
+        .step:last-child::after {
+            display: none;
+        }
+        
+        .step.active {
+            color: #d4af37;
+            font-weight: 600;
+        }
+        
+        .step.completed {
+            color: #2d5016;
+        }
+        
+        .step-number {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            color: #666;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 6px;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .step.active .step-number {
+            background: linear-gradient(135deg, #d4af37 0%, #c5a028 100%);
+            color: #1a1a1a;
+            box-shadow: 0 2px 8px rgba(212,175,55,0.4);
+        }
+        
+        .step.completed .step-number {
+            background: linear-gradient(135deg, #4a7c2c 0%, #2d5016 100%);
+            color: #ffffff;
+        }
+        
+        .license-screen {
+            min-height: 420px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .license-box {
+            max-width: 520px;
+            width: 100%;
+        }
+        
+        .license-input {
+            font-family: 'Courier New', monospace;
+            font-size: 1.15em;
+            text-align: center;
+            letter-spacing: 3px;
+            background: #ffffff;
+            border: 2px solid #d4af37;
+        }
+        
+        .watermark {
+            position: fixed;
+            bottom: 18px;
+            left: 18px;
+            background: rgba(42,42,42,0.92);
+            padding: 10px 16px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            color: #d4af37;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.3);
+            z-index: 1000;
+            border: 1px solid rgba(212,175,55,0.3);
+            letter-spacing: 0.5px;
+        }
+        
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: #2c2c2c;
+            font-size: 0.92em;
+            letter-spacing: 0.3px;
+        }
+        
+        code {
+            background: #2c2c2c;
+            color: #d4af37;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        a {
+            color: #d4af37;
+            transition: color 0.2s;
+        }
+        
+        a:hover {
+            color: #c5a028;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>מערכת חתימות דיגיטליות</h1>
+            <p>פתרון מקצועי מאובטח</p>
+        </div>
+        
+        <div class="content">
+            <div id="licenseScreen" class="license-screen">
+                <div class="license-box">
+                    <div class="section">
+                        <h2>הפעלת המערכת</h2>
+                        
+                        <div class="alert alert-info">
+                            <strong>ברוכים הבאים</strong><br>
+                            הזן את מפתח הרישיון שקיבלת לאחר הרכישה
+                        </div>
+                        
+                        <label>מפתח רישיון:</label>
+                        <input type="text" id="licenseKey" class="license-input" placeholder="SIG-XXXX-XXXX-XXXX" maxlength="19">
+                        
+                        <div style="margin-top: 22px;">
+                            <button class="btn" onclick="activateLicense()">הפעל מערכת</button>
+                        </div>
+                        
+                        <div id="licenseError" class="alert alert-error hidden">
+                            מפתח רישיון שגוי או לא תקף
+                        </div>
+                        
+                        <div class="alert alert-warning" style="margin-top: 22px; font-size: 0.88em;">
+                            <strong>הערה:</strong> המפתח מורכב מ-4 קבוצות של 4 תווים<br>
+                            דוגמה: <code>SIG-2024-A7B9-X3K2</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="mainApp" class="hidden">
+                <div class="section">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h2 style="margin: 0; border: none; padding: 0;">הגדרות GitHub</h2>
+                            <p style="color: #666; font-size: 0.88em; margin-top: 6px;">התחברות חד-פעמית</p>
+                        </div>
+                        <div id="licenseInfo" style="font-size: 0.82em; color: #666;">
+                            <strong>רישיון:</strong> <span id="activeLicense" style="color: #d4af37;"></span>
+                        </div>
+                    </div>
+                    
+                    <div id="githubLoginForm" style="margin-top: 22px;">
+                        <div class="alert alert-info">
+                            <strong>למה GitHub?</strong><br>
+                            GitHub Pages מאפשר ליצור קישורים לחתימה בחינם ללא הגבלה
+                        </div>
+                        
+                        <label>שם משתמש GitHub:</label>
+                        <input type="text" id="githubUsername" placeholder="username">
+                        
+                        <label>Personal Access Token:</label>
+                        <input type="password" id="githubToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+                        
+                        <label>שם Repository:</label>
+                        <input type="text" id="repoName" placeholder="signatures" value="signatures">
+                        
+                        <div class="alert alert-warning">
+                            <strong>קבלת Token:</strong><br>
+                            1. עבור ל-<a href="https://github.com/settings/tokens" target="_blank">GitHub Settings → Tokens</a><br>
+                            2. לחץ "Generate new token (classic)"<br>
+                            3. סמן הרשאה: <code>repo</code><br>
+                            4. העתק את הטוקן
+                        </div>
+                        
+                        <button class="btn" onclick="connectGitHub()">התחבר ל-GitHub</button>
+                    </div>
+                    
+                    <div id="githubConnected" class="hidden">
+                        <div class="alert alert-success">
+                            מחובר בהצלחה<br>
+                            <strong>משתמש:</strong> <span id="connectedUsername"></span><br>
+                            <strong>Repository:</strong> <span id="connectedRepo"></span>
+                        </div>
+                        <button class="btn btn-danger btn-small" onclick="disconnectGitHub()">התנתק</button>
+                    </div>
+                </div>
+                
+                <div id="workArea" class="hidden">
+                    <div class="step-indicator">
+                        <div class="step active" id="stepInd1">
+                            <div class="step-number">1</div>
+                            <div>העלאת PDF</div>
+                        </div>
+                        <div class="step" id="stepInd2">
+                            <div class="step-number">2</div>
+                            <div>הוספת שדות</div>
+                        </div>
+                        <div class="step" id="stepInd3">
+                            <div class="step-number">3</div>
+                            <div>יצירת קישור</div>
+                        </div>
+                    </div>
+                    
+                    <div class="section" id="uploadSection">
+                        <h2>שלב 1: העלאת מסמך</h2>
+                        <div class="upload-area" id="uploadArea">
+                            <input type="file" id="pdfFile" accept=".pdf">
+                            <div>
+                                <p style="font-size: 2.8em; margin-bottom: 12px; opacity: 0.6;">📄</p>
+                                <p style="font-size: 1.15em; margin-bottom: 8px; font-weight: 500;">גרור PDF לכאן או לחץ לבחירה</p>
+                                <p style="color: #999; font-size: 0.9em;">קבצי PDF בלבד</p>
+                            </div>
+                        </div>
+                        <div id="uploadLoading" class="loading hidden">
+                            <div class="spinner"></div>
+                            <p style="color: #666;">טוען קובץ...</p>
+                        </div>
+                    </div>
+                    
+                    <div class="section hidden" id="fieldsSection">
+                        <h2>שלב 2: הוספת שדות</h2>
+                        
+                        <div class="alert alert-info">
+                            לחץ על המסמך במקום בו תרצה להוסיף שדה
+                        </div>
+                        
+                        <label>סוג שדה:</label>
+                        <select id="fieldType">
+                            <option value="signature">חתימה</option>
+                            <option value="fullname">שם מלא</option>
+                            <option value="email">אימייל</option>
+                            <option value="phone">טלפון</option>
+                            <option value="id">תעודת זהות</option>
+                            <option value="date">תאריך</option>
+                            <option value="address">כתובת</option>
+                            <option value="custom">שדה מותאם</option>
+                        </select>
+                        
+                        <input type="text" id="customFieldLabel" class="hidden" placeholder="שם השדה">
+                        
+                        <div class="pdf-preview">
+                            <div class="pdf-canvas-wrapper">
+                                <canvas id="pdfCanvas"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 18px;">
+                            <button class="btn" onclick="startAddingField()">הוסף שדה</button>
+                            <button class="btn btn-danger btn-small" onclick="clearFields()">נקה הכל</button>
+                        </div>
+                        
+                        <div class="field-list" id="fieldList"></div>
+                        
+                        <div style="margin-top: 22px;">
+                            <button class="btn btn-success" onclick="proceedToGenerate()" id="generateBtn" disabled>המשך ליצירת קישור</button>
+                        </div>
+                    </div>
+                    
+                    <div class="section hidden" id="generateSection">
+                        <h2>שלב 3: יצירת קישור</h2>
+                        
+                        <label>שם המסמך:</label>
+                        <input type="text" id="docName" placeholder="שם המסמך">
+                        
+                        <label>שם הנמען:</label>
+                        <input type="text" id="recipientName" placeholder="שם מלא">
+                        
+                        <label>אימייל נמען (אופציונלי):</label>
+                        <input type="email" id="recipientEmail" placeholder="email@example.com">
+                        
+                        <button class="btn" onclick="generateSignatureLink()" id="finalGenerateBtn">צור קישור</button>
+                        
+                        <div id="generatingLoading" class="loading hidden">
+                            <div class="spinner"></div>
+                            <p style="color: #666;">יוצר קישור...</p>
+                        </div>
+                        
+                        <div id="linkResult" class="hidden">
+                            <div class="alert alert-success">
+                                הקישור נוצר בהצלחה
+                            </div>
+                            
+                            <div class="link-box">
+                                <strong>קישור לחתימה:</strong><br>
+                                <a href="#" id="signatureLink" target="_blank"></a>
+                            </div>
+                            
+                            <button class="btn btn-small" onclick="copyLink()">העתק קישור</button>
+                            <button class="btn btn-small btn-silver" onclick="sendViaEmail()">שלח במייל</button>
+                            <button class="btn btn-small btn-danger" onclick="startOver()">מסמך חדש</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="watermark">
+        Signature System v1.0
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+        (function() {
+            'use strict';
+            
+            const LICENSE_API = 'https://signature-license.netlify.app/.netlify/functions/verify';
+            let activeLicenseKey = null;
+            let githubConfig = null;
+            let pdfDoc = null;
+            let pdfData = null;
+            let pdfFileName = '';
+            let fields = [];
+            let isAddingField = false;
+            
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+            
+            window.onload = function() {
+                checkExistingLicense();
+            };
+            
+            function checkExistingLicense() {
+                const saved = localStorage.getItem('signature_license');
+                if (saved) {
+                    const license = JSON.parse(saved);
+                    verifyLicenseOffline(license.key);
+                }
+            }
+            
+            window.activateLicense = async function() {
+                const key = document.getElementById('licenseKey').value.trim().toUpperCase();
+                
+                if (!key) {
+                    alert('נא להזין מפתח רישיון');
+                    return;
+                }
+                
+                if (!key.match(/^SIG-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/)) {
+                    document.getElementById('licenseError').classList.remove('hidden');
+                    return;
+                }
+                
+                try {
+                    const response = await fetch(LICENSE_API + '?key=' + key);
+                    const data = await response.json();
+                    
+                    if (data.valid) {
+                        saveLicense(key, data);
+                        showMainApp(key);
+                    } else {
+                        document.getElementById('licenseError').classList.remove('hidden');
+                    }
+                } catch (error) {
+                    verifyLicenseOffline(key);
+                }
+            };
+            
+            function verifyLicenseOffline(key) {
+                if (key.match(/^SIG-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/)) {
+                    saveLicense(key, { valid: true, offline: true });
+                    showMainApp(key);
+                } else {
+                    document.getElementById('licenseError').classList.remove('hidden');
+                }
+            }
+            
+            function saveLicense(key, data) {
+                const license = {
+                    key: key,
+                    activatedAt: new Date().toISOString()
+                };
+                Object.assign(license, data);
+                localStorage.setItem('signature_license', JSON.stringify(license));
+                activeLicenseKey = key;
+            }
+            
+            function showMainApp(key) {
+                document.getElementById('licenseScreen').classList.add('hidden');
+                document.getElementById('mainApp').classList.remove('hidden');
+                document.getElementById('activeLicense').textContent = key;
+                loadGitHubConfig();
+            }
+            
+            function loadGitHubConfig() {
+                const saved = localStorage.getItem('github_signature_config');
+                if (saved) {
+                    githubConfig = JSON.parse(saved);
+                    showConnectedState();
+                }
+            }
+            
+            window.connectGitHub = async function() {
+                const username = document.getElementById('githubUsername').value.trim();
+                const token = document.getElementById('githubToken').value.trim();
+                const repoName = document.getElementById('repoName').value.trim();
+                
+                if (!username || !token || !repoName) {
+                    alert('נא למלא את כל השדות');
+                    return;
+                }
+                
+                try {
+                    const response = await fetch('https://api.github.com/user', {
+                        headers: {
+                            'Authorization': 'token ' + token,
+                            'Accept': 'application/vnd.github.v3+json'
+                        }
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('פרטי ההתחברות שגויים');
+                    }
+                    
+                    const userData = await response.json();
+                    await ensureRepository(username, repoName, token);
+                    
+                    githubConfig = {
+                        username: username,
+                        token: token,
+                        repoName: repoName,
+                        actualUsername: userData.login
+                    };
+                    
+                    localStorage.setItem('github_signature_config', JSON.stringify(githubConfig));
+                    showConnectedState();
+                    
+                } catch (error) {
+                    alert('שגיאה: ' + error.message);
+                }
+            };
+            
+            async function ensureRepository(username, repoName, token) {
+                const checkResponse = await fetch('https://api.github.com/repos/' + username + '/' + repoName, {
+                    headers: {
+                        'Authorization': 'token ' + token,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+                
+                if (checkResponse.ok) {
+                    await enableGitHubPages(username, repoName, token);
+                    return;
+                }
+                
+                const createResponse = await fetch('https://api.github.com/user/repos', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'token ' + token,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: repoName,
+                        description: 'Digital Signature System',
+                        auto_init: true,
+                        private: false
+                    })
+                });
+                
+                if (!createResponse.ok) {
+                    throw new Error('לא הצלחנו ליצור Repository');
+                }
+                
+                await new Promise(function(resolve) { setTimeout(resolve, 2000); });
+                await enableGitHubPages(username, repoName, token);
+            }
+            
+            async function enableGitHubPages(username, repoName, token) {
+                try {
+                    await fetch('https://api.github.com/repos/' + username + '/' + repoName + '/pages', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': 'token ' + token,
+                            'Accept': 'application/vnd.github.v3+json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            source: {
+                                branch: 'main',
+                                path: '/'
+                            }
+                        })
+                    });
+                } catch (e) {}
+            }
+            
+            function showConnectedState() {
+                document.getElementById('githubLoginForm').classList.add('hidden');
+                document.getElementById('githubConnected').classList.remove('hidden');
+                document.getElementById('connectedUsername').textContent = githubConfig.username;
+                document.getElementById('connectedRepo').textContent = githubConfig.repoName;
+                document.getElementById('workArea').classList.remove('hidden');
+            }
+            
+            window.disconnectGitHub = function() {
+                if (confirm('האם להתנתק?')) {
+                    localStorage.removeItem('github_signature_config');
+                    githubConfig = null;
+                    location.reload();
+                }
+            };
+            
+            const uploadArea = document.getElementById('uploadArea');
+            const pdfFileInput = document.getElementById('pdfFile');
+            
+            uploadArea.addEventListener('click', function() { pdfFileInput.click(); });
+            
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+            
+            uploadArea.addEventListener('dragleave', function() {
+                uploadArea.classList.remove('dragover');
+            });
+            
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                const file = e.dataTransfer.files[0];
+                handlePDFFile(file);
+            });
+            
+            pdfFileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                handlePDFFile(file);
+            });
+            
+            function handlePDFFile(file) {
+                if (!file || file.type !== 'application/pdf') {
+                    alert('נא להעלות PDF בלבד');
+                    return;
+                }
+                
+                pdfFileName = file.name.replace('.pdf', '');
+                document.getElementById('uploadLoading').classList.remove('hidden');
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    pdfData = e.target.result;
+                    loadPDF(pdfData);
+                };
+                reader.readAsDataURL(file);
+            }
+            
+            async function loadPDF(data) {
+                try {
+                    const loadingTask = pdfjsLib.getDocument(data);
+                    pdfDoc = await loadingTask.promise;
+                    await renderPDFPage(1);
+                    
+                    document.getElementById('uploadLoading').classList.add('hidden');
+                    document.getElementById('fieldsSection').classList.remove('hidden');
+                    updateStepIndicator(2);
+                    
+                } catch (error) {
+                    alert('שגיאה: ' + error.message);
+                    document.getElementById('uploadLoading').classList.add('hidden');
+                }
+            }
+            
+            async function renderPDFPage(pageNum) {
+                const page = await pdfDoc.getPage(pageNum);
+                const canvas = document.getElementById('pdfCanvas');
+                const ctx = canvas.getContext('2d');
+                
+                const viewport = page.getViewport({ scale: 1.5 });
+                canvas.width = viewport.width;
+                canvas.height = viewport.height;
+                
+                await page.render({
+                    canvasContext: ctx,
+                    viewport: viewport
+                }).promise;
+            }
+            
+            document.getElementById('fieldType').addEventListener('change', function() {
+                const customLabel = document.getElementById('customFieldLabel');
+                if (this.value === 'custom') {
+                    customLabel.classList.remove('hidden');
+                } else {
+                    customLabel.classList.add('hidden');
+                }
+            });
+            
+            window.startAddingField = function() {
+                isAddingField = true;
+                const canvas = document.getElementById('pdfCanvas');
+                canvas.style.border = '3px solid #d4af37';
+                alert('לחץ על המסמך במקום הרצוי');
+            };
+            
+            document.getElementById('pdfCanvas').addEventListener('click', function(e) {
+                if (!isAddingField) return;
+                
+                const rect = this.getBoundingClientRect();
+                const x = ((e.clientX - rect.left) / rect.width) * 100;
+                const y = ((e.clientY - rect.top) / rect.height) * 100;
+                
+                const fieldType = document.getElementById('fieldType').value;
+                let label = '';
+                
+                const labels = {
+                    'signature': 'חתימה',
+                    'fullname': 'שם מלא',
+                    'email': 'אימייל',
+                    'phone': 'טלפון',
+                    'id': 'תעודת זהות',
+                    'date': 'תאריך',
+                    'address': 'כתובת',
+                    'custom': document.getElementById('customFieldLabel').value || 'שדה מותאם'
+                };
+                
+                label = labels[fieldType] || 'שדה';
+                
+                fields.push({
+                    id: Date.now(),
+                    type: fieldType,
+                    label: label,
+                    x: x.toFixed(2),
+                    y: y.toFixed(2)
+                });
+                
+                updateFieldsList();
+                isAddingField = false;
+                this.style.border = '1px solid #e0e0e0';
+                document.getElementById('generateBtn').disabled = false;
+            });
+            
+            function updateFieldsList() {
+                const fieldList = document.getElementById('fieldList');
+                
+                if (fields.length === 0) {
+                    fieldList.innerHTML = '<p style="color: #999; text-align: center; padding: 22px;">אין שדות</p>';
+                    return;
+                }
+                
+                fieldList.innerHTML = '<h3 style="margin: 18px 0; font-size: 1.1em; color: #2c2c2c;">שדות:</h3>';
+                
+                fields.forEach(function(field) {
+                    const div = document.createElement('div');
+                    div.className = 'field-item';
+                    div.innerHTML = '<div><span class="field-type ' + (field.type === 'signature' ? 'signature' : 'text') + '">' + field.label + '</span><span style="color: #999; font-size: 0.88em;">מיקום: ' + field.x + '%, ' + field.y + '%</span></div><button class="btn btn-small btn-danger" onclick="removeField(' + field.id + ')">מחק</button>';
+                    fieldList.appendChild(div);
+                });
+            }
+            
+            window.removeField = function(id) {
+                fields = fields.filter(function(f) { return f.id !== id; });
+                updateFieldsList();
+                if (fields.length === 0) {
+                    document.getElementById('generateBtn').disabled = true;
+                }
+            };
+            
+            window.clearFields = function() {
+                if (confirm('למחוק הכל?')) {
+                    fields = [];
+                    updateFieldsList();
+                    document.getElementById('generateBtn').disabled = true;
+                }
+            };
+            
+            window.proceedToGenerate = function() {
+                document.getElementById('generateSection').classList.remove('hidden');
+                document.getElementById('docName').value = pdfFileName;
+                updateStepIndicator(3);
+                document.getElementById('generateSection').scrollIntoView({ behavior: 'smooth' });
+            };
+            
+            window.generateSignatureLink = async function() {
+                const docName = document.getElementById('docName').value.trim();
+                
+                if (!docName) {
+                    alert('נא להזין שם');
+                    return;
+                }
+                
+                document.getElementById('finalGenerateBtn').disabled = true;
+                document.getElementById('generatingLoading').classList.remove('hidden');
+                
+                try {
+                    const recipientName = document.getElementById('recipientName').value.trim();
+                    const signatureHTML = generateSignatureHTML(docName, recipientName);
+                    const timestamp = Date.now();
+                    const fileName = 'signature-' + timestamp + '.html';
+                    const fileUrl = await uploadToGitHub(fileName, signatureHTML);
+                    
+                    document.getElementById('generatingLoading').classList.add('hidden');
+                    document.getElementById('linkResult').classList.remove('hidden');
+                    
+                    const linkElement = document.getElementById('signatureLink');
+                    linkElement.href = fileUrl;
+                    linkElement.textContent = fileUrl;
+                    
+                    window.currentSignatureLink = {
+                        url: fileUrl,
+                        recipientEmail: document.getElementById('recipientEmail').value.trim(),
+                        recipientName: recipientName,
+                        docName: docName
+                    };
+                    
+                } catch (error) {
+                    alert('שגיאה: ' + error.message);
+                    document.getElementById('finalGenerateBtn').disabled = false;
+                    document.getElementById('generatingLoading').classList.add('hidden');
+                }
+            };
+            
+            async function uploadToGitHub(fileName, content) {
+                const username = githubConfig.username;
+                const token = githubConfig.token;
+                const repoName = githubConfig.repoName;
+                const contentBase64 = btoa(unescape(encodeURIComponent(content)));
+                
+                const response = await fetch('https://api.github.com/repos/' + username + '/' + repoName + '/contents/' + fileName, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': 'token ' + token,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: 'Add: ' + fileName,
+                        content: contentBase64
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('העלאה נכשלה');
+                }
+                
+                return 'https://' + username + '.github.io/' + repoName + '/' + fileName;
+            }
+            
+            function generateSignatureHTML(docName, recipientName) {
+                var html = '<!DOCTYPE html><html lang="he" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>חתימה - ' + docName + '</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial,sans-serif;background:#f5f5f5;padding:20px}.container{max-width:900px;margin:0 auto;background:#fff;padding:30px;border-radius:8px;box-shadow:0 5px 20px rgba(0,0,0,0.1)}h1{color:#d4af37;margin-bottom:10px;font-size:1.8em}.info{background:#fafafa;padding:15px;border-radius:6px;margin-bottom:20px;border-right:3px solid #d4af37}.pdf-view{border:2px solid #e0e0e0;border-radius:6px;padding:15px;margin:20px 0}.pdf-view img{max-width:100%;display:block}.fields{background:#fafafa;padding:25px;border-radius:6px;border:1px solid #e0e0e0}.field{margin-bottom:20px}label{display:block;font-weight:600;margin-bottom:8px;color:#2c2c2c}input{width:100%;padding:12px;border:2px solid #e0e0e0;border-radius:4px;font-size:1em}.sig-pad{width:100%;height:150px;border:2px solid #d4af37;border-radius:4px;background:#fff;cursor:crosshair}.btn{background:linear-gradient(135deg,#d4af37 0%,#c5a028 100%);color:#1a1a1a;border:none;padding:12px 30px;font-size:1em;border-radius:4px;cursor:pointer;margin:5px;font-weight:600}.btn:hover{opacity:0.9}.btn-sec{background:#999}.success{background:#f0f8f0;color:#2d5016;padding:15px;border-radius:6px;margin:15px 0;display:none;border-right:3px solid #4a7c2c}</style></head><body><div class="container"><h1>חתימה על מסמך</h1><div class="info"><strong>מסמך:</strong> ' + docName + '<br>';
+                
+                if (recipientName) {
+                    html += '<strong>נמען:</strong> ' + recipientName + '<br>';
+                }
+                
+                html += '<strong>תאריך:</strong> ' + new Date().toLocaleDateString('he-IL') + '</div><div class="pdf-view"><img src="' + pdfData + '"></div><div class="fields"><h2 style="color:#2c2c2c;margin-bottom:15px;font-size:1.3em">מלא פרטים:</h2>';
+                
+                fields.forEach(function(f) {
+                    if (f.type === 'signature') {
+                        html += '<div class="field"><label>' + f.label + ':</label><canvas class="sig-pad" id="f' + f.id + '" width="600" height="150"></canvas><button type="button" class="btn btn-sec" onclick="clear' + f.id + '()">נקה</button></div>';
+                    } else {
+                        html += '<div class="field"><label>' + f.label + ':</label><input type="' + (f.type === 'email' ? 'email' : 'text') + '" id="f' + f.id + '" required></div>';
+                    }
+                });
+                
+                html += '<button class="btn" onclick="submit()">אשר ושלח</button></div><div class="success" id="success">המסמך נשלח בהצלחה</div></div><script>';
+                
+                fields.filter(function(f) { return f.type === 'signature'; }).forEach(function(f) {
+                    html += '(function(){var c=document.getElementById("f' + f.id + '");var ctx=c.getContext("2d");var draw=false;ctx.lineWidth=2;ctx.lineCap="round";function start(e){draw=true;var r=c.getBoundingClientRect();ctx.beginPath();ctx.moveTo((e.clientX||e.touches[0].clientX)-r.left,(e.clientY||e.touches[0].clientY)-r.top)}function move(e){if(!draw)return;e.preventDefault();var r=c.getBoundingClientRect();ctx.lineTo((e.clientX||e.touches[0].clientX)-r.left,(e.clientY||e.touches[0].clientY)-r.top);ctx.stroke()}function stop(){draw=false}c.addEventListener("mousedown",start);c.addEventListener("mousemove",move);c.addEventListener("mouseup",stop);c.addEventListener("touchstart",start);c.addEventListener("touchmove",move);c.addEventListener("touchend",stop);window.clear' + f.id + '=function(){ctx.clearRect(0,0,c.width,c.height)}})();';
+                });
+                
+                html += 'function submit(){document.getElementById("success").style.display="block";setTimeout(function(){window.close()},2000)}<\/script></body></html>';
+                
+                return html;
+            }
+            
+            function updateStepIndicator(step) {
+                for (var i = 1; i <= 3; i++) {
+                    var el = document.getElementById('stepInd' + i);
+                    el.classList.remove('active', 'completed');
+                    if (i < step) el.classList.add('completed');
+                    if (i === step) el.classList.add('active');
+                }
+            }
+            
+            window.copyLink = function() {
+                const link = document.getElementById('signatureLink').href;
+                navigator.clipboard.writeText(link).then(function() {
+                    alert('הקישור הועתק');
+                });
+            };
+            
+            window.sendViaEmail = function() {
+                const data = window.currentSignatureLink;
+                const subject = encodeURIComponent('חתימה: ' + data.docName);
+                const body = encodeURIComponent('שלום ' + (data.recipientName || '') + ',\n\nנא לחתום:\n' + data.url + '\n\nתודה');
+                window.location.href = 'mailto:' + (data.recipientEmail || '') + '?subject=' + subject + '&body=' + body;
+            };
+            
+            window.startOver = function() {
+                if (confirm('מסמך חדש?')) {
+                    fields = [];
+                    document.getElementById('fieldsSection').classList.add('hidden');
+                    document.getElementById('generateSection').classList.add('hidden');
+                    document.getElementById('linkResult').classList.add('hidden');
+                    pdfFileInput.value = '';
+                    updateStepIndicator(1);
+                }
+            };
+        })();
+    </script>
+</body>
+</html>
