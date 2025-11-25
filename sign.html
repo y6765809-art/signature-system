@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>חתימה על מסמך</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Heebo', sans-serif;
+            background: linear-gradient(135deg, #1A1A1A 0%, #2C2C2C 50%, #1A1A1A 100%);
+            min-height: 100vh;
+            padding: 20px;
+            direction: rtl;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #FFD700;
+        }
+        
+        .logo {
+            font-size: 36px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        canvas {
+            max-width: 100%;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: block;
+        }
+        
+        #signatureCanvas {
+            border: 3px solid #FFD700;
+            cursor: crosshair;
+            touch-action: none;
+            width: 100%;
+            height: 200px;
+            background: white;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Heebo', sans-serif;
+            font-size: 14px;
+        }
+        
+        button {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 5px;
+        }
+        
+        .btn-primary { background: linear-gradient(135deg, #FFD700, #FFA500); color: #000; }
+        .btn-success { background: #4CAF50; color: white; }
+        .btn-danger { background: #f44336; color: white; }
+        .btn-whatsapp { background: #25D366; color: white; }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .hidden { display: none !important; }
+        
+        .success-box {
+            background: #e8f5e9;
+            border: 3px solid #4CAF50;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .section-title {
+            background: #f5f5f5;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin: 20px 0 10px 0;
+            font-weight: 700;
+            font-size: 16px;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 15px 0;
+        }
+        
+        .color-picker {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        
+        .color-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+        }
+        
+        .color-btn.active {
+            border-color: #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">✨ זרימה פלוס</div>
+            <div style="font-size: 14px; color: #666;">חתימה על מסמך</div>
+        </div>
+        
+        <div id="mainContent">
+            <h2 id="docTitle" style="margin-bottom: 20px; text-align: center;"></h2>
+            
+            <canvas id="pdfCanvas"></canvas>
+            
+            <div class="section-title">📝 מלא את השדות הנדרשים:</div>
+            <div id="formFields"></div>
+            
+            <div class="section-title">✍️ חתום כאן:</div>
+            <div class="color-picker">
+                <div class="color-btn active" style="background: #000;" onclick="setColor('#000')"></div>
+                <div class="color-btn" style="background: #0066FF;" onclick="setColor('#0066FF')"></div>
+                <div class="color-btn" style="background: #FF0000;" onclick="setColor('#FF0000')"></div>
+            </div>
+            <canvas id="signatureCanvas"></canvas>
+            <div class="button-group">
+                <button class="btn-danger" onclick="clearSignature()">🗑️ נקה חתימה</button>
+            </div>
+            
+            <button class="btn-primary" onclick="submitSignature()" style="width: 100%; margin-top: 20px;">
+                ✅ שלח חתימה
+            </button>
+        </div>
+        
+        <div id="successScreen" class="hidden">
+            <div class="success-box">
+                <div style="font-size: 80px; margin-bottom: 20px;">✅</div>
+                <h2 style="color: #4CAF50; margin-bottom: 15px;">המסמך נחתם בהצלחה!</h2>
+                <p style="margin-bottom: 30px;">תודה רבה. המסמך החתום נשמר.</p>
+                
+                <div class="section-title">💾 הורדת מסמך</div>
+                <div class="button-group">
+                    <button class="btn-success" onclick="downloadPDF()">📄 הורד PDF</button>
+                    <button class="btn-success" onclick="downloadImage()">🖼️ הורד תמונה</button>
+                </div>
+                
+                <div class="section-title">📤 שליחה חזרה</div>
+                <div class="button-group">
+                    <button class="btn-whatsapp" onclick="sendWhatsApp()">📱 שלח ב-WhatsApp</button>
+                    <button class="btn-primary" onclick="sendEmail()">📧 שלח במייל</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let documentData = null;
+        let signatureCanvas = null;
+        let signatureCtx = null;
+        let isDrawing = false;
+        let currentColor = '#000';
+        let hasSignature = false;
+        
+        // טעינת נתונים
+        window.addEventListener('DOMContentLoaded', () => {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const encoded = urlParams.get('data');
+                
+                if (!encoded) {
+                    alert('❌ קישור לא תקין');
+                    return;
+                }
+                
+                const json = decodeURIComponent(atob(encoded));
+                documentData = JSON.parse(json);
+                
+                console.log('✅ Document data loaded');
+                
+                loadDocument();
+            } catch (error) {
+                alert('❌ שגיאה בטעינת המסמך: ' + error.message);
+                console.error(error);
+            }
+        });
+        
+        function loadDocument() {
+            document.getElementById('docTitle').textContent = documentData.docName;
+            
+            const canvas = document.getElementById('pdfCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            const img = new Image();
+            img.onload = () => {
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+                
+                drawFields();
+                createFormFields();
+                setupSignature();
+                
+                console.log('✅ Document rendered');
+            };
+            img.src = documentData.pdfImage;
+        }
+        
+        function drawFields() {
+            const canvas = document.getElementById('pdfCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            documentData.fields.forEach(field => {
+                const x = field.x * canvas.width;
+                const y = field.y * canvas.height;
+                const w = field.width * canvas.width;
+                const h = field.height * canvas.height;
+                
+                ctx.fillStyle = field.color + '33';
+                ctx.fillRect(x, y, w, h);
+                ctx.strokeStyle = field.color;
+                ctx.lineWidth = 3;
+                ctx.strokeRect(x, y, w, h);
+                
+                ctx.fillStyle = '#fff';
+                ctx.font = 'bold 16px Heebo, Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(field.icon + ' ' + field.name, x + w/2, y + h/2);
+            });
+        }
+        
+        function createFormFields() {
+            const container = document.getElementById('formFields');
+            const uniqueTypes = [...new Set(documentData.fields.map(f => f.type))];
+            
+            uniqueTypes.forEach(type => {
+                if (type === 'signature') return;
+                
+                const field = documentData.fields.find(f => f.type === type);
+                const input = document.createElement('input');
+                input.id = 'field_' + type;
+                input.placeholder = field.name;
+                input.required = true;
+                
+                if (type === 'email') input.type = 'email';
+                if (type === 'date') input.type = 'date';
+                
+                container.appendChild(input);
+            });
+        }
+        
+        function setupSignature() {
+            signatureCanvas = document.getElementById('signatureCanvas');
+            signatureCtx = signatureCanvas.getContext('2d');
+            
+            signatureCanvas.width = signatureCanvas.parentElement.offsetWidth - 60;
+            
+            signatureCanvas.addEventListener('mousedown', startDrawing);
+            signatureCanvas.addEventListener('mousemove', draw);
+            signatureCanvas.addEventListener('mouseup', stopDrawing);
+            signatureCanvas.addEventListener('mouseout', stopDrawing);
+            
+            signatureCanvas.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                const touch = e.touches[0];
+                const rect = signatureCanvas.getBoundingClientRect();
+                const mouseEvent = new MouseEvent('mousedown', {
+                    clientX: touch.clientX,
+                    clientY: touch.clientY
+                });
+                signatureCanvas.dispatchEvent(mouseEvent);
+            });
+            
+            signatureCanvas.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                const touch = e.touches[0];
+                const mouseEvent = new MouseEvent('mousemove', {
+                    clientX: touch.clientX,
+                    clientY: touch.clientY
+                });
+                signatureCanvas.dispatchEvent(mouseEvent);
+            });
+            
+            signatureCanvas.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                signatureCanvas.dispatchEvent(new MouseEvent('mouseup'));
+            });
+        }
+        
+        function startDrawing(e) {
+            isDrawing = true;
+            hasSignature = true;
+            
+            const rect = signatureCanvas.getBoundingClientRect();
+            const x = (e.clientX - rect.left) * (signatureCanvas.width / rect.width);
+            const y = (e.clientY - rect.top) * (signatureCanvas.height / rect.height);
+            
+            signatureCtx.beginPath();
+            signatureCtx.moveTo(x, y);
+            signatureCtx.strokeStyle = currentColor;
+            signatureCtx.lineWidth = 3;
+            signatureCtx.lineCap = 'round';
+            signatureCtx.lineJoin = 'round';
+        }
+        
+        function draw(e) {
+            if (!isDrawing) return;
+            
+            const rect = signatureCanvas.getBoundingClientRect();
+            const x = (e.clientX - rect.left) * (signatureCanvas.width / rect.width);
+            const y = (e.clientY - rect.top) * (signatureCanvas.height / rect.height);
+            
+            signatureCtx.lineTo(x, y);
+            signatureCtx.stroke();
+        }
+        
+        function stopDrawing() {
+            isDrawing = false;
+        }
+        
+        function setColor(color) {
+            currentColor = color;
+            document.querySelectorAll('.color-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+        
+        function clearSignature() {
+            signatureCtx.clearRect(0, 0, signatureCanvas.width, signatureCanvas.height);
+            hasSignature = false;
+        }
+        
+        function submitSignature() {
+            if (!hasSignature) {
+                alert('❌ אנא חתום במסגרת החתימה');
+                return;
+            }
+            
+            let isValid = true;
+            document.querySelectorAll('#formFields input').forEach(input => {
+                if (!input.value.trim()) {
+                    input.style.borderColor = 'red';
+                    isValid = false;
+                } else {
+                    input.style.borderColor = '';
+                }
+            });
+            
+            if (!isValid) {
+                alert('❌ אנא מלא את כל השדות');
+                return;
+            }
+            
+            document.getElementById('mainContent').classList.add('hidden');
+            document.getElementById('successScreen').classList.remove('hidden');
+            
+            console.log('✅ Signature submitted');
+        }
+        
+        function downloadPDF() {
+            try {
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF();
+                
+                const canvas = document.getElementById('pdfCanvas');
+                const imgData = canvas.toDataURL('image/jpeg', 0.9);
+                
+                const imgWidth = 210;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                
+                pdf.addImage(imgData, 'JPEG', 0, 0, imgWidth, imgHeight);
+                pdf.save(`${documentData.docName}_חתום.pdf`);
+                
+                console.log('✅ PDF downloaded');
+            } catch (error) {
+                alert('❌ שגיאה ביצירת PDF');
+                console.error(error);
+            }
+        }
+        
+        function downloadImage() {
+            const canvas = document.getElementById('pdfCanvas');
+            const link = document.createElement('a');
+            link.download = `${documentData.docName}_חתום.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            
+            console.log('✅ Image downloaded');
+        }
+        
+        function sendWhatsApp() {
+            if (!documentData.recipientPhone) {
+                alert('❌ לא נמצא מספר טלפון');
+                return;
+            }
+            
+            const message = `✅ חתמתי על המסמך "${documentData.docName}"!`;
+            const url = `https://wa.me/${documentData.recipientPhone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
+            window.open(url, '_blank');
+        }
+        
+        function sendEmail() {
+            const subject = `המסמך "${documentData.docName}" נחתם`;
+            const body = `שלום,\n\nהמסמך "${documentData.docName}" נחתם בהצלחה.\n\nתודה,\n${documentData.recipientName}`;
+            const mailto = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            window.open(mailto);
+        }
+    </script>
+</body>
+</html>
